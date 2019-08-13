@@ -1,3 +1,5 @@
+package id.sandalov.neural.network;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
