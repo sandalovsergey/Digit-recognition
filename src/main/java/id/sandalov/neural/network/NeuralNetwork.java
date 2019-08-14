@@ -9,9 +9,7 @@ public class NeuralNetwork {
     private int curEpoch = 1;
     InputLayer inLayer;
     OutputLayer outLayer;
-
-   /* private Neuron[] inputNeurons;
-    private Neuron[] outputNeurons;*/
+    HiddenLayer[] hiddenLayers;
 
     public NeuralNetwork(int inAmt, int outAmt, int hiddenLayersAmt, double learningRate, int maxEpoch) {
         this.inAmt = inAmt;
@@ -19,27 +17,8 @@ public class NeuralNetwork {
         this.hiddenLayersAmt = hiddenLayersAmt;
         this.learningRate = learningRate;
         this.maxEpoch = maxEpoch;
-        this.inLayer = new InputLayer();
-        this.outLayer = new OutputLayer();
-        HiddenLayer[] hiddenLayers = new HiddenLayer[this.hiddenLayersAmt];
-
-        /*inputNeurons = new Neuron[INPUT_NEURON_NUMBERS];
-        outputNeurons = new Neuron[OUTPUT_NEURON_NUMBERS];
-
-        for (int i = 0; i < INPUT_NEURON_NUMBERS; ++i) {
-            inputNeurons[i] = new InputNeuron(OUTPUT_NEURON_NUMBERS);
-        }
-
-        for (int i = 0; i < OUTPUT_NEURON_NUMBERS; ++i) {
-            outputNeurons[i] = new OutputNeuron(INPUT_NEURON_NUMBERS);
-        }
-
-        for (Neuron n : inputNeurons) {
-            n.setConnection(outputNeurons);
-        }
-
-        for (Neuron n : outputNeurons) {
-            n.setConnection(inputNeurons);
-        }*/
+        this.inLayer = new InputLayer(this.inAmt, "");
+        this.outLayer = new OutputLayer(this.outAmt);
+        //this.hiddenLayers = new HiddenLayer[this.hiddenLayersAmt];
     }
 }

@@ -25,10 +25,6 @@ public abstract class Neuron {
     public static double Sigmoid(double x) {
         return 1.0 / (1 + Math.exp(-x));
     }
-
-    public void setConnection(Layer layer) {
-
-    }
 }
 
 abstract class WeightedNeuron extends Neuron {
@@ -44,14 +40,8 @@ abstract class WeightedNeuron extends Neuron {
 }
 
 class InputNeuron extends Neuron {
-    private Neuron[] rightNeurons;
+    public InputNeuron() {
 
-    public InputNeuron(int numConnections) {
-        rightNeurons = new Neuron[numConnections];
-    }
-
-    public Neuron[] getRightNeurons() {
-        return rightNeurons;
     }
 
     @Override
@@ -59,42 +49,21 @@ class InputNeuron extends Neuron {
         super.setInput(input);
         super.setOutput(input);
     }
-
-    @Override
-    public void setConnection(Layer outLayer) {
-        for (int i = 0; i < rightNeurons.length; ++i) {
-            //rightNeurons[i] = arr[i];
-        }
-    }
 }
 
 class OutputNeuron extends WeightedNeuron {
-    private Neuron[] leftNeurons;
     private final Random random = new Random(47);
 
     public OutputNeuron(int numConnections) {
-        leftNeurons = new Neuron[numConnections];
         weights = new double[numConnections];
         for (int i = 0; i < weights.length; ++i) {
             weights[i] = random.nextGaussian();
         }
     }
-
-    public Neuron[] getLeftNeurons() {
-        return leftNeurons;
-    }
-
     @Override
     public void setInput(double input) {
         super.setInput(input);
-        super.setOutput(Sigmoid(input));
-    }
-
-    @Override
-    public void setConnection(Layer layer) {
-        for (int i = 0; i < leftNeurons.length; ++i) {
-            //leftNeurons[i] = arr[i];
-        }
+        super.setOutput(Sigmoid(input)); //sum
     }
 }
 
@@ -102,6 +71,9 @@ class HiddenNeuron extends Neuron {
 
 }
 
-class Bias {
-
+class Bias extends Neuron {
+    public Bias() {
+        setInput(1);
+        setOutput(1);
+    }
 }

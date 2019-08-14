@@ -4,23 +4,41 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-public class Sample {
-    public static final int gridH = 5;
-    public static final int gridW = 3;
-    private int[][] grid = new int[gridH][gridW];
+public abstract class Sample {
+    private int gridH;
+    private int gridW;
+    private double[][] grid;
 
-    public Sample(String filename) {
-        Scanner scanner = null;
-        try {
-            scanner = new Scanner(new File(filename));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        for (int i = 0; i < gridH; ++i) {
-            String temp = scanner.nextLine();
-            for (int j = 0; j < gridW; ++j) {
-                grid[i][j] = temp.charAt(j) == 'X' ? 1 : 0;
-            }
-        }
+    public void setGridH(int gridH) {
+        this.gridH = gridH;
+    }
+
+    public int getGridH() {
+        return gridH;
+    }
+
+    public void setGridW(int gridW) {
+        this.gridW = gridW;
+    }
+
+    public int getGridW() {
+        return gridW;
+    }
+
+    public void setGrid(double[][] grid) {
+        this.grid = grid;
+    }
+
+    public double[][] getGrid() {
+        return grid;
+    }
+}
+
+class OldSample extends Sample {
+    public OldSample(String filename) {
+        setGridH(5);
+        setGridW(3);
+        setGrid(new double[5][3]);
+
     }
 }
