@@ -9,7 +9,7 @@ public class NeuralNetwork {
     private int curEpoch = 1;
     InputLayer inLayer;
     OutputLayer outLayer;
-    HiddenLayer[] hiddenLayers;
+    //HiddenLayer[] hiddenLayers;
 
     public NeuralNetwork(int inAmt, int outAmt, int hiddenLayersAmt, double learningRate, int maxEpoch) {
         this.inAmt = inAmt;

@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Iterator;
 import java.util.Scanner;
-import java.util.logging.Logger;
 
 public abstract class Layer {
     Neuron[] neurons;
@@ -34,15 +33,15 @@ class InputLayer extends Layer {
             System.exit(-1);
         }
 
-        /*Sample sample = new Sample(filename);
+        Sample sample = new OldSampleMarked(filename);
         if (sample.size() != neurons.length - 1) {
             throw new IllegalArgumentException("inAmt and sample length not match");
-            System.exit(-2);
+            //System.exit(-2);
         }
-        Iterator<Neuron> it = sample.iterator();
+        Iterator<Double> it = sample.iterator();
         for (Neuron n : neurons) {
             n.setInput(it.next());
-        }*/
+        }
 
     }
 }

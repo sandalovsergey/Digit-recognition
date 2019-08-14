@@ -62,8 +62,8 @@ class OutputNeuron extends WeightedNeuron {
     }
     @Override
     public void setInput(double input) {
-        super.setInput(input);
-        super.setOutput(Sigmoid(input)); //sum
+        setInput(input);
+        setOutput(Sigmoid(input)); //sum
     }
 }
 
