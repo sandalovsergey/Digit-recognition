@@ -5,15 +5,43 @@ import java.io.FileNotFoundException;
 import java.util.Iterator;
 import java.util.Scanner;
 
-public abstract class Layer {
+public abstract class Layer implements Iterable<Neuron>{
     Neuron[] neurons;
 
     public Neuron[] getNeurons() {
         return neurons;
     }
+
+    public int size() {
+        return neurons.length;
+    }
+
+    @Override
+    public Iterator<Neuron> iterator() {
+        return new Iterator<Neuron>() {
+            private int i = 0;
+
+            @Override
+            public boolean hasNext() {
+                return i < neurons.length;
+            }
+
+            @Override
+            public Neuron next() {
+                return neurons[i++];
+            }
+
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException();
+            }
+        };
+    }
 }
 
 class InputLayer extends Layer {
+    Layer nextLayer;
+
     public InputLayer(int inAmt, String filename) {
         neurons = new InputNeuron[inAmt + 1];
         for(Neuron n : neurons) {
@@ -52,7 +80,31 @@ class HiddenLayer extends Layer {
 
 class OutputLayer extends Layer {
     OutputNeuron[] outputNeurons;
-    public OutputLayer(int outAmt) {
+    Layer previousLayer;
+
+    public OutputLayer(int outAmt, Layer previousLayer) {
+        this.previousLayer = previousLayer;
         outputNeurons = new OutputNeuron[outAmt];
+        for (Neuron n : outputNeurons) {
+            n = new OutputNeuron(this.previousLayer.size());
+        }
+    }
+
+    private int maxActiveOutput() {
+        int index = 0;
+        double max = outputNeurons[0].getOutput();
+        for (int i = 0; i < outputNeurons.length; ++i) {
+            if (outputNeurons[i].getOutput() > max) {
+                max = outputNeurons[i].getOutput();
+                index = i;
+            }
+        }
+
+        int number = index == 9 ? 0 : index + 1;
+        return number;
+    }
+
+    public void weightsCorrection() {
+
     }
 }
