@@ -42,16 +42,16 @@ public abstract class Layer implements Iterable<Neuron>{
 class InputLayer extends Layer {
     Layer nextLayer;
 
-    public InputLayer(int inAmt, String filename) {
+    private InputLayer(int inAmt) {
         neurons = new InputNeuron[inAmt + 1];
         for(Neuron n : neurons) {
             n = new InputNeuron();
         }
         neurons[inAmt] = new Bias();
-        initInputLayer(filename);
     }
 
-    private void initInputLayer(String filename) {
+    public InputLayer(int inAmt, String filename) {
+        this(inAmt);
         Scanner scanner = null;
         try {
             scanner = new Scanner(new File(filename));
@@ -70,7 +70,18 @@ class InputLayer extends Layer {
         for (Neuron n : neurons) {
             n.setInput(it.next());
         }
+    }
 
+    public InputLayer(int inAmt, Sample sample) {
+        this(inAmt);
+        if (sample.size() != neurons.length - 1) {
+            throw new IllegalArgumentException("inAmt and sample length not match");
+            //System.exit(-2);
+        }
+        Iterator<Double> it = sample.iterator();
+        for (Neuron n : neurons) {
+            n.setInput(it.next());
+        }
     }
 }
 
@@ -104,7 +115,9 @@ class OutputLayer extends Layer {
         return number;
     }
 
-    public void weightsCorrection() {
+    public void weightsCorrection(double learningRate) {
+        int numConnections = previousLayer.size();
+
 
     }
 }

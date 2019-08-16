@@ -5,7 +5,7 @@ import java.io.FileNotFoundException;
 import java.util.Iterator;
 import java.util.Scanner;
 
-public abstract class Sample implements Iterable<Double>{
+public abstract class Sample implements Iterable<Double> {
     protected int gridH;
     protected int gridW;
     protected double[][] grid;
@@ -63,7 +63,7 @@ public abstract class Sample implements Iterable<Double>{
     }
 }
 
-class OldSample extends Sample{
+class OldSample extends Sample {
     public OldSample(String filename) {
         gridH = 5;
         gridW = 3;
@@ -100,7 +100,7 @@ class OldSampleMarked extends OldSample {
 
     public OldSampleMarked(String filename) {
         super(filename);
-        mark = Integer.parseInt(filename.split(".")[0]);
+        mark = Integer.parseInt(filename.split("_")[0]);
         if (mark < 0 || mark > 9) {
             throw new IllegalArgumentException("Check filename");
         }

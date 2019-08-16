@@ -12,8 +12,10 @@ public class NeuralNetwork {
     InputLayer inLayer;
     OutputLayer outLayer;
     //HiddenLayer[] hiddenLayers;
+    SampleStorage sampleStorage;
 
-    public NeuralNetwork(int inAmt, int outAmt, int hiddenLayersAmt, double learningRate, int maxEpoch) {
+    public NeuralNetwork(int inAmt, int outAmt, int hiddenLayersAmt,
+                         double learningRate, int maxEpoch, String storagePath) {
         this.inAmt = inAmt;
         this.outAmt = outAmt;
         this.hiddenLayersAmt = hiddenLayersAmt;
@@ -25,6 +27,7 @@ public class NeuralNetwork {
         this.outLayer = new OutputLayer(this.outAmt, this.inLayer);
         //this.hiddenLayers = new HiddenLayer[this.hiddenLayersAmt];
         this.inLayer.nextLayer = outLayer;
+        this.sampleStorage = new SampleStorage(storagePath);
     }
 
     private boolean needLearning() {
@@ -35,6 +38,8 @@ public class NeuralNetwork {
 
     public void learning() {
         while (needLearning()) {
+            //TODO: переделать прием выборки. Должна приниматься в learning, а не в конструкторе InputLayer
+
             Iterator<Neuron> it = outLayer.iterator();
             while (it.hasNext()) {
                 OutputNeuron n = (OutputNeuron) it.next();
@@ -46,7 +51,7 @@ public class NeuralNetwork {
                 }
                 n.setInput(sum);
 
-                outLayer.weightsCorrection();
+                outLayer.weightsCorrection(learningRate);
             }
         }
     }
