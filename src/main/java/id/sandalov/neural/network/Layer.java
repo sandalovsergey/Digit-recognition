@@ -6,10 +6,15 @@ import java.util.Iterator;
 import java.util.Scanner;
 
 public abstract class Layer implements Iterable<Neuron>{
-    Neuron[] neurons;
+    protected Neuron[] neurons;
+    protected Bias bias;
 
     public Neuron[] getNeurons() {
         return neurons;
+    }
+
+    public Bias getBias() {
+        return bias;
     }
 
     public int size() {
@@ -40,14 +45,26 @@ public abstract class Layer implements Iterable<Neuron>{
 }
 
 class InputLayer extends Layer {
-    Layer nextLayer;
+    private Layer nextLayer;
 
-    private InputLayer(int inAmt) {
-        neurons = new InputNeuron[inAmt + 1];
-        for(Neuron n : neurons) {
-            n = new InputNeuron();
+    public Layer getNextLayer() {
+        return nextLayer;
+    }
+
+    public void setNextLayer(Layer nextLayer) {
+        this.nextLayer = nextLayer;
+    }
+
+    public InputLayer(int inAmt) {
+        neurons = new InputNeuron[inAmt];
+        for (int i = 0; i < inAmt; ++i) {
+            neurons[i] = new InputNeuron();
         }
-        neurons[inAmt] = new Bias();
+        //TODO: узнать, почему выше не работает
+        /*for(Neuron n : neurons) {
+            n = new InputNeuron();
+        }*/
+        bias = new Bias();
     }
 
     public InputLayer(int inAmt, String filename) {
@@ -74,11 +91,15 @@ class InputLayer extends Layer {
 
     public InputLayer(int inAmt, Sample sample) {
         this(inAmt);
-        if (sample.size() != neurons.length - 1) {
+        setInputs(sample);
+    }
+
+    public void setInputs(Sample sample) {
+        if (sample.size() != neurons.length) {
             throw new IllegalArgumentException("inAmt and sample length not match");
             //System.exit(-2);
         }
-        Iterator<Double> it = sample.iterator();
+        Iterator<Double> it = sample.iterator(); //а может while it.hasNext() ?
         for (Neuron n : neurons) {
             n.setInput(it.next());
         }
@@ -90,23 +111,26 @@ class HiddenLayer extends Layer {
 }
 
 class OutputLayer extends Layer {
-    OutputNeuron[] outputNeurons;
-    Layer previousLayer;
+    //OutputNeuron[] outputNeurons;
+    private Layer previousLayer;
 
     public OutputLayer(int outAmt, Layer previousLayer) {
         this.previousLayer = previousLayer;
-        outputNeurons = new OutputNeuron[outAmt];
-        for (Neuron n : outputNeurons) {
+        neurons = new OutputNeuron[outAmt];
+        /*for (Neuron n : outputNeurons) {
             n = new OutputNeuron(this.previousLayer.size());
+        }*/
+        for (int i = 0; i < outAmt; ++i) {
+            neurons[i] = new OutputNeuron(this.previousLayer.size());
         }
     }
 
     private int maxActiveOutput() {
         int index = 0;
-        double max = outputNeurons[0].getOutput();
-        for (int i = 0; i < outputNeurons.length; ++i) {
-            if (outputNeurons[i].getOutput() > max) {
-                max = outputNeurons[i].getOutput();
+        double max = neurons[0].getOutput();
+        for (int i = 0; i < neurons.length; ++i) {
+            if (neurons[i].getOutput() > max) {
+                max = neurons[i].getOutput();
                 index = i;
             }
         }
@@ -115,9 +139,7 @@ class OutputLayer extends Layer {
         return number;
     }
 
-    public void weightsCorrection(double learningRate) {
+    public void accumDelta(double learningRate, Sample currentSample) {
         int numConnections = previousLayer.size();
-
-
     }
 }

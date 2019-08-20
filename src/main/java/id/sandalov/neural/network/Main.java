@@ -4,7 +4,8 @@ import java.util.Scanner;
 
 public class Main {
     public static void run() {
-        //NeuralNetwork network = new NeuralNetwork();
+        NeuralNetwork network = new NeuralNetwork(15, 10, 0, 0.5, 2, "/home/user/IdeaProjects/" +
+                "Digit-recognition/src/main/resources");
 
 
         Scanner scanner = new Scanner(System.in);
@@ -19,6 +20,9 @@ public class Main {
             int choice = Integer.parseInt(scanner.nextLine());
             switch (choice) {
                 case 1:
+                    System.out.println("Learning ...");
+                    network.learning();
+                    System.out.println("Done!");
                     break;
                 case 2:
                     break;

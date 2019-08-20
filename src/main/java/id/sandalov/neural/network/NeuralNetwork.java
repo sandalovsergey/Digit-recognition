@@ -1,6 +1,7 @@
 package id.sandalov.neural.network;
 
 import java.util.Iterator;
+import java.util.Random;
 
 public class NeuralNetwork {
     private final int inAmt;
@@ -9,10 +10,12 @@ public class NeuralNetwork {
     private double learningRate;
     private final int maxEpoch;
     private int curEpoch = 1;
-    InputLayer inLayer;
-    OutputLayer outLayer;
+    private InputLayer inLayer;
+    private OutputLayer outLayer;
     //HiddenLayer[] hiddenLayers;
-    SampleStorage sampleStorage;
+    private SampleStorage sampleStorage;
+    public static final Random random = new Random(47);
+
 
     public NeuralNetwork(int inAmt, int outAmt, int hiddenLayersAmt,
                          double learningRate, int maxEpoch, String storagePath) {
@@ -21,37 +24,43 @@ public class NeuralNetwork {
         this.hiddenLayersAmt = hiddenLayersAmt;
         this.learningRate = learningRate;
         this.maxEpoch = maxEpoch;
-        this.inLayer = new InputLayer(this.inAmt, "E:\\JetBrainsAcademy\\" +
-                "Projects\\Digit-recognition\\src\\main\\resources\\9_1.sample");
+        this.sampleStorage = new SampleStorage(storagePath);
+        this.inLayer = new InputLayer(this.inAmt);
 
         this.outLayer = new OutputLayer(this.outAmt, this.inLayer);
         //this.hiddenLayers = new HiddenLayer[this.hiddenLayersAmt];
-        this.inLayer.nextLayer = outLayer;
-        this.sampleStorage = new SampleStorage(storagePath);
+        this.inLayer.setNextLayer(outLayer);
     }
 
     private boolean needLearning() {
-        return true;
+        return curEpoch++ > maxEpoch ? false : true;
     }
 
 
 
     public void learning() {
         while (needLearning()) {
-            //TODO: переделать прием выборки. Должна приниматься в learning, а не в конструкторе InputLayer
 
-            Iterator<Neuron> it = outLayer.iterator();
-            while (it.hasNext()) {
-                OutputNeuron n = (OutputNeuron) it.next();
-                double[] weights = n.getWeight();
-                Iterator<Neuron> itPrev = inLayer.iterator();
-                double sum = 0.0;
-                for (double w : weights) {
-                    sum += w * itPrev.next().getOutput();
+            Iterator<Sample> sampleIter = sampleStorage.iterator();
+            while (sampleIter.hasNext()) {
+                Sample currentSample = sampleIter.next();
+                inLayer.setInputs(currentSample);
+
+                Iterator<Neuron> it = outLayer.iterator();
+                while (it.hasNext()) {
+                    OutputNeuron n = (OutputNeuron) it.next();
+                    double[] weights = n.getWeight();
+                    Iterator<Neuron> itPrev = inLayer.iterator();
+                    double sum = 0.0;
+                    for (double w : weights) {
+                        sum += w * itPrev.next().getOutput();
+                    }
+
+                    sum += inLayer.getBias().getOutput(); //Вынести в функцию суммирования
+                    n.setInput(sum);
+
                 }
-                n.setInput(sum);
-
-                outLayer.weightsCorrection(learningRate);
+                outLayer.accumDelta(learningRate, currentSample);
             }
         }
     }

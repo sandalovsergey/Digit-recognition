@@ -82,13 +82,13 @@ class OldSample extends Sample {
                 throw new IllegalArgumentException("Too much in sample");
             }
 
-            String[] line = scanner.nextLine().split(" ");
-            if (line.length != gridW) {
+            String line = scanner.nextLine();
+            if (line.length() != gridW) {
                 throw new IllegalArgumentException("Wrong params in sample");
             }
             int j = 0;
-            for (String s : line) {
-                grid[i][j++] = s.equals("X") ? 1.0 : 0.0;
+            for (char c : line.toCharArray()) {
+                grid[i][j++] = c == 'X' ? 1.0 : 0.0;
             }
             ++i;
         }

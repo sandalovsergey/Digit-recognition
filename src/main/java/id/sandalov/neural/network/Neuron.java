@@ -1,7 +1,5 @@
 package id.sandalov.neural.network;
 
-import java.util.Random;
-
 public abstract class Neuron {
     private double input;
     private double output;
@@ -30,6 +28,8 @@ public abstract class Neuron {
 abstract class WeightedNeuron extends Neuron {
     double[] weights;
 
+    double[] deltas;
+
     public double[] getWeight() {
         return weights;
     }
@@ -52,18 +52,19 @@ class InputNeuron extends Neuron {
 }
 
 class OutputNeuron extends WeightedNeuron {
-    private final Random random = new Random(47);
 
     public OutputNeuron(int numConnections) {
         weights = new double[numConnections];
+        deltas = new double[numConnections];
         for (int i = 0; i < weights.length; ++i) {
-            weights[i] = random.nextGaussian();
+            weights[i] = NeuralNetwork.random.nextGaussian();
+            deltas[i] = 0;
         }
     }
     @Override
     public void setInput(double input) {
-        setInput(input);
-        setOutput(Sigmoid(input));
+        super.setInput(input);
+        super.setOutput(Sigmoid(input));
     }
 }
 
