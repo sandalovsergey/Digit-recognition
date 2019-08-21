@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.Scanner;
 
 public abstract class Layer implements Iterable<Neuron>, Serializable {
+    private static final long serialVersionUID = 2L;
     protected Neuron[] neurons;
     protected Bias bias;
 

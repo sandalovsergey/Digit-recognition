@@ -5,7 +5,7 @@ import java.util.Scanner;
 public class Main {
     public static void run() {
         NeuralNetwork network;
-
+        int mark;
         Scanner scanner = new Scanner(System.in);
         boolean isRepeat = true;
 
@@ -26,7 +26,14 @@ public class Main {
                     break;
                 case 2:
                     network = NeuralNetwork.load("src/main/trained.network/net.ser");
-                    int mark = network.guessingTestSample("src/main/tests/test1.sample");
+                    System.out.println("Input grid:");
+                    mark = network.guessingInput();
+                    System.out.println("This number is " + mark);
+                    break;
+
+                case 3:
+                    network = NeuralNetwork.load("src/main/trained.network/net.ser");
+                    mark = network.guessingTestSample("src/main/tests/test.sample");
                     System.out.println("This number is " + mark);
                     break;
                 case 0:

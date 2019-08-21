@@ -3,8 +3,10 @@ package id.sandalov.neural.network;
 import java.io.*;
 import java.util.Iterator;
 import java.util.Random;
+import java.util.Scanner;
 
 public class NeuralNetwork implements Serializable {
+    private static final long serialVersionUID = 1L;
     private final int inAmt;
     private final int outAmt;
     private final int hiddenLayersAmt;
@@ -90,6 +92,33 @@ public class NeuralNetwork implements Serializable {
     public int guessingTestSample(String filename) {
         Sample testSample = new OldSample(filename);
         return guessFromSample(testSample);
+    }
+
+    public int guessingInput() {
+        Scanner scannerIn = new Scanner(System.in);
+        BufferedWriter out = null;
+        try {
+            out = new BufferedWriter(new FileWriter("src/main/tests/input.sample"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        for (int i = 0; i < 5; ++i) {
+            try {
+                String line = scannerIn.nextLine();
+                out.write(line);
+                out.newLine();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return guessingTestSample("src/main/tests/input.sample");
     }
 
     public void save(String path) {

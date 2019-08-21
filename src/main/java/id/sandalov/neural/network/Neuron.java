@@ -3,6 +3,7 @@ package id.sandalov.neural.network;
 import java.io.Serializable;
 
 public abstract class Neuron implements Serializable {
+    private static final long serialVersionUID = 3L;
     private double input;
     private double output;
 
