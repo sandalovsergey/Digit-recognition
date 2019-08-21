@@ -18,7 +18,7 @@ public abstract class Layer implements Iterable<Neuron>{
     }
 
     public int size() {
-        return neurons.length;
+        return neurons.length + 1;
     }
 
     @Override
@@ -28,12 +28,17 @@ public abstract class Layer implements Iterable<Neuron>{
 
             @Override
             public boolean hasNext() {
-                return i < neurons.length;
+                return i < neurons.length + 1;
             }
 
             @Override
             public Neuron next() {
-                return neurons[i++];
+                if (i < neurons.length) {
+                    return neurons[i++];
+                } else {
+                    ++i;
+                    return bias;
+                }
             }
 
             @Override
@@ -139,7 +144,56 @@ class OutputLayer extends Layer {
         return number;
     }
 
-    public void accumDelta(double learningRate, Sample currentSample) {
-        int numConnections = previousLayer.size();
+    private int[] initIdeals(int mark) {
+        int[] ideals = new int[this.size()];
+        for (int i = 0; i < ideals.length; ++i) {
+            ideals[i] = 0;
+        }
+
+        if (mark == 0) {
+            ideals[9] = 1;
+        } else {
+            ideals[mark - 1] = 1; //Не логичнее ли переделать на 0 1 2 3 4 5 6 7 8 9 порядок?
+        }
+
+        return ideals;
+    }
+
+    public void accumNeuronDeltas(double learningRate, Sample currentSample) {
+        if (currentSample instanceof OldSampleMarked) {
+            OldSampleMarked sample = (OldSampleMarked) currentSample;
+            int mark = sample.getMark(); // 1 2 3 4 5 6 7 8 9 0 <--- order
+            int[] ideals = initIdeals(mark);
+            Iterator<Neuron> outIter = this.iterator();
+            int cntOut = 0;
+            while (outIter.hasNext()) {
+                OutputNeuron outNeuron = (OutputNeuron) outIter.next();
+                int ideal = ideals[cntOut++];
+                Iterator<Neuron> inIter = previousLayer.iterator();
+                double[] deltas = new double[previousLayer.size()];
+                int cntIn = 0;
+                while (inIter.hasNext()) {
+                    Neuron inNeuron = inIter.next();
+                    deltas[cntIn++] = learningRate * inNeuron.getOutput() * (ideal - outNeuron.getOutput());
+                }
+                outNeuron.addDeltas(deltas);
+            }
+        }
+    }
+
+    public void meanNeuronDeltas(int storageSize) {
+        Iterator<Neuron> it = this.iterator();
+        while (it.hasNext()) {
+            OutputNeuron n = (OutputNeuron) it.next();
+            n.meanDeltas(storageSize);
+        }
+    }
+
+    public void correctNeuronWeights() {
+        Iterator<Neuron> it = this.iterator();
+        while (it.hasNext()) {
+            OutputNeuron n = (OutputNeuron) it.next();
+            n.correctWeights();
+        }
     }
 }

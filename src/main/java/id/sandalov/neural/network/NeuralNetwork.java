@@ -36,32 +36,40 @@ public class NeuralNetwork {
         return curEpoch++ > maxEpoch ? false : true;
     }
 
+    private void backwardPropagation(Sample currentSample) {
+        outLayer.accumNeuronDeltas(learningRate, currentSample);
+        outLayer.meanNeuronDeltas(this.sampleStorage.size());
+        outLayer.correctNeuronWeights();
+    }
 
+    private void forwardPropagation(Sample currentSample) {
+        inLayer.setInputs(currentSample);
+        Iterator<Neuron> outIter = outLayer.iterator();
+        while (outIter.hasNext()) {
+            OutputNeuron n = (OutputNeuron) outIter.next();
+            double[] weights = n.getWeights();
+            Iterator<Neuron> inIter = inLayer.iterator();
+            double sum = 0.0;
+            for (double w : weights) {
+                sum += w * inIter.next().getOutput();
+            }
+            sum += inLayer.getBias().getOutput();
+            n.setInput(sum);
+        }
+    }
+
+    private void oneEpochLearning() {
+        Iterator<Sample> sampleIter = sampleStorage.iterator();
+        while (sampleIter.hasNext()) {
+            Sample currentSample = sampleIter.next();
+            forwardPropagation(currentSample);
+            backwardPropagation(currentSample);
+        }
+    }
 
     public void learning() {
         while (needLearning()) {
-
-            Iterator<Sample> sampleIter = sampleStorage.iterator();
-            while (sampleIter.hasNext()) {
-                Sample currentSample = sampleIter.next();
-                inLayer.setInputs(currentSample);
-
-                Iterator<Neuron> it = outLayer.iterator();
-                while (it.hasNext()) {
-                    OutputNeuron n = (OutputNeuron) it.next();
-                    double[] weights = n.getWeight();
-                    Iterator<Neuron> itPrev = inLayer.iterator();
-                    double sum = 0.0;
-                    for (double w : weights) {
-                        sum += w * itPrev.next().getOutput();
-                    }
-
-                    sum += inLayer.getBias().getOutput(); //Вынести в функцию суммирования
-                    n.setInput(sum);
-
-                }
-                outLayer.accumDelta(learningRate, currentSample);
-            }
+            oneEpochLearning();
         }
     }
 }

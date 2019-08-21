@@ -105,4 +105,8 @@ class OldSampleMarked extends OldSample {
             throw new IllegalArgumentException("Check filename");
         }
     }
+
+    public int getMark() {
+        return mark;
+    }
 }

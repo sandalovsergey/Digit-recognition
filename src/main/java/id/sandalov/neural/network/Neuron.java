@@ -27,15 +27,22 @@ public abstract class Neuron {
 
 abstract class WeightedNeuron extends Neuron {
     double[] weights;
-
     double[] deltas;
 
-    public double[] getWeight() {
+    public double[] getWeights() {
         return weights;
     }
 
-    public void setWeight(double[] weights) {
+    public double[] getDeltas() {
+        return deltas;
+    }
+
+    public void setWeights(double[] weights) {
         this.weights = weights;
+    }
+
+    public void setDeltas(double[] deltas) {
+        this.deltas = deltas;
     }
 }
 
@@ -65,6 +72,29 @@ class OutputNeuron extends WeightedNeuron {
     public void setInput(double input) {
         super.setInput(input);
         super.setOutput(Sigmoid(input));
+    }
+
+    public void addDeltas(double[] deltas) {
+        if (deltas.length != this.deltas.length) {
+            System.out.println("Different deltas len");
+            System.exit(-1);
+        }
+
+        for (int i = 0; i < deltas.length; ++i) {
+            this.deltas[i] += deltas[i];
+        }
+    }
+
+    public void meanDeltas(int storageSize) {
+        for (double d : this.deltas) {
+            d /= storageSize;
+        }
+    }
+
+    public void correctWeights() {
+        for (int i = 0; i < weights.length; ++i) {
+            weights[i] += deltas[i];
+        }
     }
 }
 
