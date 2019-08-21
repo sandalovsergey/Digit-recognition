@@ -86,8 +86,8 @@ class OutputNeuron extends WeightedNeuron {
     }
 
     public void meanDeltas(int storageSize) {
-        for (double d : this.deltas) {
-            d /= storageSize;
+        for (int i = 0; i < deltas.length; ++i) {
+            deltas[i] /= storageSize; //Почему не работает через foreach???
         }
     }
 

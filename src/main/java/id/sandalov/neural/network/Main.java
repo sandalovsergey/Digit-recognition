@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class Main {
     public static void run() {
-        NeuralNetwork network = new NeuralNetwork(15, 10, 0, 0.5, 2, "/home/user/IdeaProjects/" +
+        NeuralNetwork network = new NeuralNetwork(15, 10, 0, 0.5, 100000, "/home/user/IdeaProjects/" +
                 "Digit-recognition/src/main/resources");
 
 
@@ -25,6 +25,8 @@ public class Main {
                     System.out.println("Done!");
                     break;
                 case 2:
+                    int mark = network.guessingTestSample("/home/user/IdeaProjects/Digit-recognition/src/main/tests/test1.sample");
+                    System.out.println("This number is " + mark);
                     break;
                 case 0:
                     isRepeat = false;

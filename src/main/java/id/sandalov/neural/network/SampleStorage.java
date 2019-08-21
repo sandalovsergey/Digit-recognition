@@ -6,7 +6,7 @@ import java.util.Iterator;
 public class SampleStorage implements Iterable<Sample> {
     private String storagePath;
     private ArrayList<Sample> sampleContainer = new ArrayList<Sample>();
-    private static final int SAMPLE_AMOUNT = 1;
+    private static final int SAMPLE_AMOUNT = 10;
     private static final String EXTENSION = ".sample";
 
     public SampleStorage(String storagePath) {
@@ -14,7 +14,7 @@ public class SampleStorage implements Iterable<Sample> {
 
         for(int i = 0; i < SAMPLE_AMOUNT; ++i) {
             String samplePath = "/" + i + "_" + 1 + EXTENSION;
-            Sample sample = new OldSample(storagePath + samplePath);
+            Sample sample = new OldSampleMarked(storagePath + samplePath, i);
             sampleContainer.add(sample);
         }
     }

@@ -106,6 +106,15 @@ class OldSampleMarked extends OldSample {
         }
     }
 
+    public OldSampleMarked(String filename, int mark) {
+        super(filename);
+        this.mark = mark;
+        if (mark < 0 || mark > 9) {
+            throw new IllegalArgumentException("Check filename");
+        }
+    }
+
+
     public int getMark() {
         return mark;
     }

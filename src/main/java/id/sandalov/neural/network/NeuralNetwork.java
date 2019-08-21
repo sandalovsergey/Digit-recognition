@@ -42,6 +42,16 @@ public class NeuralNetwork {
         outLayer.correctNeuronWeights();
     }
 
+    private double calculateInput(Iterator<Neuron> inIter, double[] weights) {
+        double sum = 0.0;
+        for (double w : weights) {
+            sum += w * inIter.next().getOutput();
+        }
+        //sum += inLayer.getBias().getOutput();
+
+        return sum;
+    }
+
     private void forwardPropagation(Sample currentSample) {
         inLayer.setInputs(currentSample);
         Iterator<Neuron> outIter = outLayer.iterator();
@@ -49,11 +59,7 @@ public class NeuralNetwork {
             OutputNeuron n = (OutputNeuron) outIter.next();
             double[] weights = n.getWeights();
             Iterator<Neuron> inIter = inLayer.iterator();
-            double sum = 0.0;
-            for (double w : weights) {
-                sum += w * inIter.next().getOutput();
-            }
-            sum += inLayer.getBias().getOutput();
+            double sum = calculateInput(inIter, weights);
             n.setInput(sum);
         }
     }
@@ -71,5 +77,17 @@ public class NeuralNetwork {
         while (needLearning()) {
             oneEpochLearning();
         }
+    }
+
+    private int guessFromSample(Sample sample) {
+        int mark = -1;
+        forwardPropagation(sample);
+        mark = this.outLayer.maxActiveOutput();
+        return mark;
+    }
+
+    public int guessingTestSample(String filename) {
+        Sample testSample = new OldSample(filename);
+        return guessFromSample(testSample);
     }
 }

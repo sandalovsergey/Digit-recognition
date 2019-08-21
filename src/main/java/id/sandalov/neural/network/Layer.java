@@ -119,6 +119,34 @@ class OutputLayer extends Layer {
     //OutputNeuron[] outputNeurons;
     private Layer previousLayer;
 
+    @Override
+    public int size() {
+        return neurons.length;
+    }
+
+    @Override
+    public Iterator<Neuron> iterator() {
+        return new Iterator<Neuron>() {
+            private int i = 0;
+
+            @Override
+            public boolean hasNext() {
+                return i < size();
+            }
+
+            @Override
+            public Neuron next() {
+                return neurons[i++];
+            }
+
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException();
+            }
+        };
+    }
+
+
     public OutputLayer(int outAmt, Layer previousLayer) {
         this.previousLayer = previousLayer;
         neurons = new OutputNeuron[outAmt];
@@ -130,7 +158,7 @@ class OutputLayer extends Layer {
         }
     }
 
-    private int maxActiveOutput() {
+    public int maxActiveOutput() {
         int index = 0;
         double max = neurons[0].getOutput();
         for (int i = 0; i < neurons.length; ++i) {
