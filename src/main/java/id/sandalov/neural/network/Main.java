@@ -4,9 +4,7 @@ import java.util.Scanner;
 
 public class Main {
     public static void run() {
-        NeuralNetwork network = new NeuralNetwork(15, 10, 0, 0.5, 100000, "/home/user/IdeaProjects/" +
-                "Digit-recognition/src/main/resources");
-
+        NeuralNetwork network;
 
         Scanner scanner = new Scanner(System.in);
         boolean isRepeat = true;
@@ -20,12 +18,15 @@ public class Main {
             int choice = Integer.parseInt(scanner.nextLine());
             switch (choice) {
                 case 1:
+                    network = new NeuralNetwork(15, 10, 0, 0.5, 100000, "src/main/resources");
                     System.out.println("Learning ...");
                     network.learning();
                     System.out.println("Done!");
+                    network.save("src/main/trained.network/net.ser");
                     break;
                 case 2:
-                    int mark = network.guessingTestSample("/home/user/IdeaProjects/Digit-recognition/src/main/tests/test1.sample");
+                    network = NeuralNetwork.load("src/main/trained.network/net.ser");
+                    int mark = network.guessingTestSample("src/main/tests/test1.sample");
                     System.out.println("This number is " + mark);
                     break;
                 case 0:

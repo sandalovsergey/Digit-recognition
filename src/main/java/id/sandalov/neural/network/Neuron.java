@@ -1,6 +1,8 @@
 package id.sandalov.neural.network;
 
-public abstract class Neuron {
+import java.io.Serializable;
+
+public abstract class Neuron implements Serializable {
     private double input;
     private double output;
 

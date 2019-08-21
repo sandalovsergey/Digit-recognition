@@ -2,10 +2,11 @@ package id.sandalov.neural.network;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Scanner;
 
-public abstract class Layer implements Iterable<Neuron>{
+public abstract class Layer implements Iterable<Neuron>, Serializable {
     protected Neuron[] neurons;
     protected Bias bias;
 

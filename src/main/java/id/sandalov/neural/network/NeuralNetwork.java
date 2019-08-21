@@ -1,9 +1,10 @@
 package id.sandalov.neural.network;
 
+import java.io.*;
 import java.util.Iterator;
 import java.util.Random;
 
-public class NeuralNetwork {
+public class NeuralNetwork implements Serializable {
     private final int inAmt;
     private final int outAmt;
     private final int hiddenLayersAmt;
@@ -13,8 +14,8 @@ public class NeuralNetwork {
     private InputLayer inLayer;
     private OutputLayer outLayer;
     //HiddenLayer[] hiddenLayers;
-    private SampleStorage sampleStorage;
-    public static final Random random = new Random(47);
+    private transient SampleStorage sampleStorage;
+    public transient static final Random random = new Random(47);
 
 
     public NeuralNetwork(int inAmt, int outAmt, int hiddenLayersAmt,
@@ -89,5 +90,46 @@ public class NeuralNetwork {
     public int guessingTestSample(String filename) {
         Sample testSample = new OldSample(filename);
         return guessFromSample(testSample);
+    }
+
+    public void save(String path) {
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(path);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(this);
+            oos.close();
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static NeuralNetwork load(String filename) {
+        NeuralNetwork neuralNetwork = null;
+        FileInputStream fis = null;
+        try {
+            fis = new FileInputStream(filename);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            neuralNetwork = (NeuralNetwork) ois.readObject();
+            ois.close();
+            fis.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return neuralNetwork;
     }
 }
